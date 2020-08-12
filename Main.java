@@ -13,7 +13,9 @@ public class Main {
 
         initField();
         printField();
-        checkField();
+        askTurn(X);
+        printField();
+        //checkField();
     }
 
     public static void initField() {
@@ -40,6 +42,39 @@ public class Main {
         }
         System.out.println("---------");
     }
+
+    public static void askTurn(char symbol) {
+
+        while (true) {
+            int x;
+            int y;
+            System.out.print("Enter the coordinates: ");
+
+            //check symbols without numbers
+            while (true) {
+                String turn = scanner.nextLine();
+                if (!turn.matches("\\d\\s\\d")) {
+                    System.out.println("You should enter numbers!");
+                    System.out.print("Enter the coordinates: ");
+                } else {
+                    x = Integer.parseInt(String.valueOf(turn.charAt(0))) - 1;
+                    y = Integer.parseInt(String.valueOf(turn.charAt(2))) - 1;
+                    break;
+                }
+            }
+
+            // possible make turn
+            if (x < 0 || x > SIZE - 1 || y < 0 || y > SIZE - 1) {
+                System.out.println("Coordinates should be from 1 to 3!");
+            } else if (gameField[x][y] == X || gameField[x][y] == O) {
+                System.out.println("This cell is occupied! Choose another one!");
+            } else {
+                gameField[x][y] = symbol;
+                break;
+            }
+        }
+    }
+
 
     public static boolean checkField() {
 
