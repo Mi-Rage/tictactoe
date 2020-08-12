@@ -11,23 +11,27 @@ public class Main {
 
     public static void main(String[] args) {
 
+        char playerSymbol = X;
+
         initField();
         printField();
-        askTurn(X);
-        printField();
-        //checkField();
+        while (true) {
+            askTurn(playerSymbol);
+            printField();
+            if (isEndGame()) {
+                break;
+            } else {
+                playerSymbol = (playerSymbol == X ? O : X);
+            }
+        }
     }
 
     public static void initField() {
-        System.out.print("Enter cells:");
-        String cells = scanner.nextLine();
 
         gameField = new char[SIZE][SIZE];
 
-        int count = 0;
         for (int i = 0; i < SIZE * SIZE; i++) {
-            gameField[i / SIZE][i % SIZE] = cells.charAt(count);
-            count++;
+            gameField[i / SIZE][i % SIZE] = '_';
         }
     }
 
@@ -76,44 +80,17 @@ public class Main {
     }
 
 
-    public static boolean checkField() {
-
-        // check impossible
-        int countX = 0;
-        int countO = 0;
-
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if (gameField[i][j] == X) {
-                    countX++;
-                }
-                if (gameField[i][j] == O) {
-                    countO++;
-                }
-            }
-        }
-
-        if (Math.abs(countO - countX) > 1) {
-            System.out.println("Impossible");
-            return false;
-        }
+    public static boolean isEndGame() {
 
         //check win & impossible win
-
         if (checkDiagWin(X) || checkDiagWin(O)) {
             return true;
         }
 
-        boolean winX = checkRowColWin(X);
-        boolean winO = checkRowColWin(O);
-
-        if (winX && winO) {
-            System.out.println("Impossible");
-            return true;
-        } else if (winX) {
+        if (checkRowColWin(X)) {
             System.out.println("X wins");
             return true;
-        } else if (winO) {
+        } else if (checkRowColWin(O)) {
             System.out.println("O wins");
             return true;
         }
@@ -122,8 +99,7 @@ public class Main {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 if (gameField[i][j] == ' ' || gameField[i][j] == '_') {
-                    System.out.println("Game not finished");
-                    return true;
+                    return false;
                 }
             }
         }
